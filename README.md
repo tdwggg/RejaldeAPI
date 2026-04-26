@@ -1,6 +1,2 @@
 # RejaldeAPI
-Hello
-
-#Gali
-Hello
-nyah
+Hello pre
