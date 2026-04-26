@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🏰 Dragon's Lair - D&D Adventure Hub</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-gold: #D4AF37;
+      --secondary-gold: #B8860B;
+      --dark-stone: #2C2C2C;
+      --stone-gray: #4A4A4A;
+      --parchment: #F5DEB3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-image: url('BG.jpg');
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+      font-family: 'Orbitron', monospace;
+      color: var(--parchment);
+      overflow-x: hidden;
+      position: relative;
+      padding-top: 76px; /* Fixed navbar height */
+      min-height: 100vh;
+    }
+
+    /* Navbar Custom Styling */
+    .navbar {
+      background: linear-gradient(135deg, rgba(12,12,12,0.95), rgba(26,26,46,0.95)) !important;
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid var(--primary-gold);
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
+      padding: 0.5rem 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1030;
+    }
+
+    .navbar-brand {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-gold) !important;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .navbar-brand:hover {
+      color: var(--secondary-gold) !important;
+      transform: scale(1.05);
+    }
+
+    .navbar-nav .nav-link {
+      font-family: 'Orbitron', monospace;
+      font-weight: 600;
+      color: var(--parchment) !important;
+      margin: 0 0.5rem;
+      padding: 0.75rem 1.25rem !important;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .navbar-nav .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .navbar-nav .nav-link:hover::before {
+      left: 100%;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: var(--primary-gold) !important;
+      background: rgba(212, 175, 55, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .navbar-toggler {
+      border: 2px solid var(--primary-gold);
+      border-radius: 8px;
+    }
+
+    .navbar-toggler:focus {
+      box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+    }
+
+    /* Animated background elements */
+    .bgAnimation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.1;
+    }
+
+    .floatingParticle {
+      position: absolute;
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+
+    .mainTitle {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      background: linear-gradient(45deg, var(--primary-gold), #FFD700, var(--secondary-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+      text-align: center;
+      margin-bottom: 2rem;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { filter: drop-shadow(0 0 20px var(--primary-gold)); }
+      to { filter: drop-shadow(0 0 30px var(--primary-gold)); }
+    }
+
+    .subtitle {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      color: var(--primary-gold);
+      text-align: center;
+      margin-bottom: 3rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .mainContent {
+      min-height: calc(100vh - 76px);
+      padding-bottom: 2rem;
+    }
+
+    .gameContainer {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: rgba(42, 42, 42, 0.9);
+      border-radius: 20px;
+      border: 2px solid var(--primary-gold);
+      box-shadow: 
+        0 0 50px rgba(212, 175, 55, 0.3),
+        inset 0 0 50px rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gameContainer::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, transparent 40%, rgba(212, 175, 55, 0.1) 50%);
+      animation: rotate 20s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .gameContainer > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btnGame {
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 1rem 2rem;
+      margin: 0.5rem;
+      border: none;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      position: relative;
+      overflow: hidden;
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btnGame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .btnGame:hover::before {
+      left: 100%;
+    }
+
+    .btnJoke {
+      background: linear-gradient(145deg, #FF6B35, #F7931E);
+      box-shadow: 
+        0 10px 30px rgba(255, 107, 53, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+      color: white;
+    }
+
+    .btnJoke:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 20px 40px rgba(255, 107, 53, 0.6),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+      background: linear-gradient(145deg, #FF8E53, #F9A825);
+    }
+
+    .btnSpell {
+      background: linear-gradient(145deg, #6A4C93, #8E44AD);
+      box-shadow: 
+        0 10px 30px rgba(106, 76, 147, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+      color: white;
+    }
+
+    .btnSpell:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 20px 40px rgba(106, 76, 147, 0.6),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+      background: linear-gradient(145deg, #7F5BB2, #A569BD);
+    }
+
+    .btnMonster {
+      background: linear-gradient(145deg, #2E8B57, #228B22);
+      box-shadow: 
+        0 10px 30px rgba(46, 139, 87, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+      color: white;
+    }
+
+    .btnMonster:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 20px 40px rgba(46, 139, 87, 0.6),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+      background: linear-gradient(145deg, #3AA77A, #32CD32);
+    }
+
+    .outputContainer {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: linear-gradient(145deg, rgba(75,75,75,0.8), rgba(20,20,20,0.9));
+      border-radius: 15px;
+      border: 1px solid var(--primary-gold);
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.7);
+      min-height: 200px;
+      position: relative;
+    }
+
+    #output {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      line-height: 1.6;
+      color: var(--parchment);
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      white-space: pre-wrap;
+    }
+
+    .outputType {
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      background: var(--primary-gold);
+      color: #000;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--primary-gold);
+    }
+
+    .loading i {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 2rem;
+      padding: 1rem;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    .statItem {
+      text-align: center;
+    }
+
+    .statNumber {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-gold);
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 70px;
+      }
+      
+      .navbar {
+        padding: 0.25rem 0;
+      }
+      
+      .gameContainer {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      
+      .btnGame {
+        font-size: 1rem;
+        padding: 0.8rem 1.5rem;
+        width: 100%;
+        margin: 0.25rem 0;
+      }
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--dark-stone);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-gold);
+      border-radius: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary-gold);
+    }
+    .BG {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.2;
+      z-index: -1;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-dragon"></i> Dragon's Lair
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Adventures</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Spells</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Monsters</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Animated background -->
+  <div class="bgAnimation">
+    <div class="floatingParticle" style="left: 10%; animation-delay: 0s; font-size: 2rem;">⭐</div>
+    <div class="floatingParticle" style="left: 20%; animation-delay: 2s; font-size: 1.5rem;">⚡</div>
+    <div class="floatingParticle" style="left: 40%; animation-delay: 5s; font-size: 2.5rem;">🗡️</div>
+    <div class="floatingParticle" style="left: 60%; animation-delay: 8s; font-size: 1.8rem;">💎</div>
+    <div class="floatingParticle" style="left: 80%; animation-delay: 12s; font-size: 2rem;">🔥</div>
+    <div class="floatingParticle" style="left: 90%; animation-delay: 15s; font-size: 1.2rem;">✨</div>
+  </div>
+
+ 
+  <div class="mainContent">
+    <div class="container-fluid p-4">
+      <div class="mainTitle">
+        <i class="fas fa-dragon"></i> Dragon's Lair
+        
+      </div>
+      
+      <p class="subtitle">
+        Unleash Epic Adventures & Epic Laughs
+      </p>
+
+      <div class="gameContainer">
+        <div class="row g-3 justify-content-center mb-4">
+          <div class="col-md-4 col-12">
+            <button onclick="getJoke()" class="btn btnGame btnJoke w-100">
+              <i class="fas fa-laugh"></i> Tavern Tale
+            </button>
+          </div>
+          <div class="col-md-4 col-12">
+            <button onclick="getSpell()" class="btn btnGame btnSpell w-100">
+              <i class="fas fa-magic"></i> Arcane Spell
+            </button>
+          </div>
+          <div class="col-md-4 col-12">
+            <button onclick="getMonster()" class="btn btnGame btnMonster w-100">
+              <i class="fas fa-skull"></i> Dungeon Beast
+            </button>
+            <button onclick="getAttacker()" class="btn btn-danger">👾 Get Attacker</button>
+            <p id="monster"></p>
+          </div>
+          <div class="col-md-4 col 12">
+              <button onclick="getBattle()" class="btn btn-danger">Battle</button>
+              <p id="monster"></p>
+          </div>
+        </div>
+
+        <div class="loading" id="loading">
+          <i class="fas fa-spinner"></i> Summoning Adventure...
+        </div>
+
+        <div class="outputContainer">
+          <div id="outputType" class="outputType" style="display: none;"></div>
+          <div id="output">⚔️ Ready for adventure? Click a button to begin your quest!</div>
+        </div>
+
+        <div class="stats">
+          <div class="statItem">
+            <span class="statNumber" id="jokeCount">0</span>
+            Tales Heard
+          </div>
+          <div class="statItem">
+            <span class="statNumber" id="spellCount">0</span>
+            Spells Cast
+          </div>
+          <div class="statItem">
+            <span class="statNumber" id="monsterCount">0</span>
+            Beasts Slain
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    let stats = {
+      jokes: 0,
+      spells: 0,
+      monsters: 0
+    };
+
+    function updateStats() {
+            document.getElementById('jokeCount').textContent = stats.jokes;
+      document.getElementById('spellCount').textContent = stats.spells;
+      document.getElementById('monsterCount').textContent = stats.monsters;
+    }
+
+    function showLoading() {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('outputType').style.display = 'none';
+    }
+
+    function hideLoading(type) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('outputType').style.display = 'block';
+      document.getElementById('outputType').textContent = type;
+    }
+
+    
+    async function getJoke() {
+      showLoading();
+      try {
+        const res = await fetch("https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit");
+        const data = await res.json();
+
+        let joke = data.type === "single"
+          ? data.joke
+          : `${data.setup}\n\n${data.delivery}`;
+
+        document.getElementById("output").innerHTML = 
+          `<i class="fas fa-volume-up"></i> <strong>${joke}</strong>`;
+        
+        stats.jokes++;
+        updateStats();
+
+      } catch (err) {
+        document.getElementById("output").innerHTML = 
+          `❌ The bard's lute string broke! Try again, adventurer.`;
+      } finally {
+        hideLoading('Tavern Tale');
+      }
+    }
+
+    
+    async function getSpell() {
+      showLoading();
+      try {
+        
+        const listRes = await fetch("https://www.dnd5eapi.co/api/spells");
+        const listData = await listRes.json();
+        const randomSpell = listData.results[Math.floor(Math.random() * listData.results.length)];
+        
+        const spellRes = await fetch("https://www.dnd5eapi.co" + randomSpell.url);
+        const spellData = await spellRes.json();
+
+        const desc = spellData.desc.join(' ').substring(0, 400) + 
+                    (spellData.desc.join(' ').length > 400 ? '...' : '');
+        
+        document.getElementById("output").innerHTML = 
+          `<i class="fas fa-hat-wizard"></i> <strong>${spellData.name}</strong><br><small>Level ${spellData.level}</small><br><br>${desc}`;
+
+        stats.spells++;
+        updateStats();
+
+      } catch (err) {
+        document.getElementById("output").innerHTML = 
+          `❌ The spellbook is locked in the wizard's tower! Try again.`;
+      } finally {
+        hideLoading('Arcane Spell');
+      }
+    }
+
+   
+    async function getMonster() {
+      showLoading();
+      try {
+        // Get random monster
+        const listRes = await fetch("https://www.dnd5eapi.co/api/monsters");
+        const listData = await listRes.json();
+        const randomMonster = listData.results[Math.floor(Math.random() * listData.results.length)];
+        
+        const monsterRes = await fetch("https://www.dnd5eapi.co" + randomMonster.url);
+        const monsterData = await monsterRes.json();
+
+        document.getElementById("output").innerHTML = 
+          `<i class="fas fa-skull-crossbones"></i> <strong>${monsterData.name}</strong><br>
+          <small>Size: ${monsterData.size} | Type: ${monsterData.type} | CR: ${monsterData.challenge_rating}</small><br><br>
+          <em>"${monsterData.desc ? monsterData.desc.substring(0, 300) + '...' : 'A fearsome creature lurketh in the shadows!'}"</em>`;
+
+        stats.monsters++;
+        updateStats();
+
+      } catch (err) {
+        document.getElementById("output").innerHTML = 
+          `❌ The dungeon master hides the bestiary! Try again, brave hero.`;
+      } finally {
+        hideLoading('Dungeon Beast');
+      }
+    }
+
+    
+    document.querySelectorAll('.btnGame').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Create sword swing sound
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
+        
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+        
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1);
+      });
+    });
+
+   
+    const title = document.querySelector('.mainTitle');
+    let clickCount = 0;
+    title.addEventListener('click', function() {
+      clickCount++;
+      if (clickCount === 2) {
+        document.getElementById('output').innerHTML = 
+          `🧙‍♂️ <strong>Secret revealed!</strong> You found the hidden DM note:<br>
+          "Roll for initiative... and remember, the dice gods favor the bold!"`;  
+        document.getElementById('outputType').textContent = 'DM Whisper';
+        document.getElementById('outputType').style.display = 'block';
+        clickCount = 0;
+      }
+    });
+
+    
+    function animateStat(statId, target) {
+      const stat = document.getElementById(statId);
+      const start = parseInt(stat.textContent);
+      const increment = target > start ? 1 : -1;
+      let current = start;
+      
+      const timer = setInterval(() => {
+        current += increment;
+        stat.textContent = current;
+        if (current === target) clearInterval(timer);
+      }, 50);
+    }
+
+    
+    const originalUpdateStats = updateStats;
+    updateStats = function() {
+      animateStat('jokeCount', stats.jokes);
+      animateStat('spellCount', stats.spells);
+      animateStat('monsterCount', stats.monsters);
+    };
+
+  
+    window.addEventListener('load', function() {
+      const welcomeText = document.getElementById('output');
+      const texts = [
+        '⚔️ Ready for adventure? Click a button to begin your quest!',
+        '🏰 Explore ancient dungeons and hear tales from wandering bards...',
+        '🎲 Your destiny awaits in the Dragon\'s Lair!'
+      ];
+      let index = 0;
+      
+      const typeWriter = () => {
+        if (index < texts.length) {
+          welcomeText.textContent = texts[index];
+          index++;
+          setTimeout(typeWriter, 3000);
+        }
+      };
+      setTimeout(typeWriter, 1000);
+    });
+
+  
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      deferredPrompt = e;
+    });
+
+    
+    document.addEventListener('keydown', function(e) {
+      switch(e.key.toLowerCase()) {
+        case 'j':
+          e.preventDefault();
+          getJoke();
+          break;
+        case 's':
+          e.preventDefault();
+          getSpell();
+          break;
+        case 'm':
+          e.preventDefault();
+          getMonster();
+          break;
+      }
+    });
+    async function getMonster() {
+      try {
+   
+    const res = await fetch("https://www.dnd5eapi.co/api/2014/monsters");
+    const data = await res.json();
+
+   
+    const random = data.results[Math.floor(Math.random() * data.results.length)];
+
+    
+    const monsterRes = await fetch("https://www.dnd5eapi.co" + random.url);
+    const monsterData = await monsterRes.json();
+
+    
+    document.getElementById("monster").innerText =
+      monsterData.name + " (HP: " + monsterData.hit_points + ")";
+
+  } catch (err) {
+    document.getElementById("monster").innerText = "Error loading monster";
+  }
+}
+</script>
+  </script>
+</body>
+</html>
