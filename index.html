@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>🏰 Dragon's Lair - D&D Adventure Hub</title>
+  <title>DnD</title>
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -38,7 +38,7 @@
       min-height: 100vh;
     }
 
-    /* Navbar Custom Styling */
+  
     .navbar {
       background: linear-gradient(135deg, rgba(12,12,12,0.95), rgba(26,26,46,0.95)) !important;
       backdrop-filter: blur(10px);
@@ -283,6 +283,41 @@
       background: linear-gradient(145deg, #3AA77A, #32CD32);
     }
 
+    .btnBattle {
+      background: linear-gradient(145deg, #DC143C, #B22222);
+      box-shadow: 
+        0 10px 30px rgba(220, 20, 60, 0.4),
+        inset 0 1px 0 rgba(255,255,255,0.3);
+      color: white;
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 15px;
+      min-height: 70px;
+      width: 100%;
+    }
+
+    .btnBattle:hover {
+      transform: translateY(-5px);
+      box-shadow: 
+        0 20px 40px rgba(220, 20, 60, 0.6),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+      background: linear-gradient(145deg, #FF4040, #DC143C);
+    }
+
+    .battleInfo {
+      background: rgba(220, 20, 60, 0.2);
+      border: 2px solid #DC143C;
+      border-radius: 15px;
+      padding: 1rem;
+      margin: 1rem 0;
+      color: var(--parchment);
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+    }
+
     .outputContainer {
       margin-top: 3rem;
       padding: 2rem;
@@ -332,27 +367,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    .stats {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 2rem;
-      padding: 1rem;
-      background: rgba(212, 175, 55, 0.1);
-      border-radius: 10px;
-      font-size: 0.9rem;
-    }
-
-    .statItem {
-      text-align: center;
-    }
-
-    .statNumber {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary-gold);
-      display: block;
-    }
-
     @media (max-width: 768px) {
       body {
         padding-top: 70px;
@@ -367,7 +381,7 @@
         padding: 1.5rem;
       }
       
-      .btnGame {
+      .btnGame, .btnBattle {
         font-size: 1rem;
         padding: 0.8rem 1.5rem;
         width: 100%;
@@ -392,16 +406,6 @@
     ::-webkit-scrollbar-thumb:hover {
       background: var(--secondary-gold);
     }
-    .BG {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.2;
-      z-index: -1;
-    }
   </style>
 </head>
 
@@ -417,16 +421,16 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">Home</a>
+            <a class="nav-link" href="index.html">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Adventures</a>
+            <a class="nav-link" href="adventures.html">Adventures</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Spells</a>
+            <a class="nav-link" href="spell.html">Spells</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Monsters</a>
+            <a class="nav-link" href="monster.html">Monsters</a>
           </li>
         </ul>
       </div>
@@ -443,12 +447,10 @@
     <div class="floatingParticle" style="left: 90%; animation-delay: 15s; font-size: 1.2rem;">✨</div>
   </div>
 
- 
   <div class="mainContent">
     <div class="container-fluid p-4">
       <div class="mainTitle">
         <i class="fas fa-dragon"></i> Dragon's Lair
-        
       </div>
       
       <p class="subtitle">
@@ -457,26 +459,40 @@
 
       <div class="gameContainer">
         <div class="row g-3 justify-content-center mb-4">
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <button onclick="getJoke()" class="btn btnGame btnJoke w-100">
               <i class="fas fa-laugh"></i> Tavern Tale
             </button>
           </div>
-          <div class="col-md-4 col-12">
+          <div class="col-md-3 col-12">
             <button onclick="getSpell()" class="btn btnGame btnSpell w-100">
               <i class="fas fa-magic"></i> Arcane Spell
             </button>
           </div>
-          <div class="col-md-4 col-12">
-            <button onclick="getMonster()" class="btn btnGame btnMonster w-100">
+          <div class="col-md-3 col-12">
+            <button onclick="getDungeonBeast()" class="btn btnGame btnMonster w-100">
               <i class="fas fa-skull"></i> Dungeon Beast
             </button>
-            <button onclick="getAttacker()" class="btn btn-danger">👾 Get Attacker</button>
-            <p id="monster"></p>
           </div>
-          <div class="col-md-4 col 12">
-              <button onclick="getBattle()" class="btn btn-danger">Battle</button>
-              <p id="monster"></p>
+          <div class="col-md-3 col-12">
+            <button onclick="getAttacker()" class="btn btnGame btnBattle w-100">
+              <i class="fas fa-fist-raised"></i> Get Attacker
+            </button>
+          </div>
+        </div>
+
+        <div class="row g-3 justify-content-center mb-4">
+          <div class="col-md-5 col-12">
+            <div class="battleInfo" id="battleInfo" style="display: none;">
+              <strong><i class="fas fa-dragon"></i> Battle Ready!</strong><br>
+              <span id="defenderInfo"></span><br>
+              <span id="attackerInfo"></span>
+            </div>
+          </div>
+          <div class="col-md-3 col-12">
+            <button onclick="getBattle()" class="btn btnGame btnBattle w-100" id="battleBtn" disabled>
+              <i class="fas fa-fire"></i> BATTLE!
+            </button>
           </div>
         </div>
 
@@ -488,21 +504,6 @@
           <div id="outputType" class="outputType" style="display: none;"></div>
           <div id="output">⚔️ Ready for adventure? Click a button to begin your quest!</div>
         </div>
-
-        <div class="stats">
-          <div class="statItem">
-            <span class="statNumber" id="jokeCount">0</span>
-            Tales Heard
-          </div>
-          <div class="statItem">
-            <span class="statNumber" id="spellCount">0</span>
-            Spells Cast
-          </div>
-          <div class="statItem">
-            <span class="statNumber" id="monsterCount">0</span>
-            Beasts Slain
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -511,17 +512,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   
   <script>
-    let stats = {
-      jokes: 0,
-      spells: 0,
-      monsters: 0
-    };
-
-    function updateStats() {
-            document.getElementById('jokeCount').textContent = stats.jokes;
-      document.getElementById('spellCount').textContent = stats.spells;
-      document.getElementById('monsterCount').textContent = stats.monsters;
-    }
+    let currentDefender = null;
+    let currentAttacker = null;
 
     function showLoading() {
       document.getElementById('loading').style.display = 'block';
@@ -534,7 +526,6 @@
       document.getElementById('outputType').textContent = type;
     }
 
-    
     async function getJoke() {
       showLoading();
       try {
@@ -548,9 +539,6 @@
         document.getElementById("output").innerHTML = 
           `<i class="fas fa-volume-up"></i> <strong>${joke}</strong>`;
         
-        stats.jokes++;
-        updateStats();
-
       } catch (err) {
         document.getElementById("output").innerHTML = 
           `❌ The bard's lute string broke! Try again, adventurer.`;
@@ -559,11 +547,9 @@
       }
     }
 
-    
     async function getSpell() {
       showLoading();
       try {
-        
         const listRes = await fetch("https://www.dnd5eapi.co/api/spells");
         const listData = await listRes.json();
         const randomSpell = listData.results[Math.floor(Math.random() * listData.results.length)];
@@ -577,9 +563,6 @@
         document.getElementById("output").innerHTML = 
           `<i class="fas fa-hat-wizard"></i> <strong>${spellData.name}</strong><br><small>Level ${spellData.level}</small><br><br>${desc}`;
 
-        stats.spells++;
-        updateStats();
-
       } catch (err) {
         document.getElementById("output").innerHTML = 
           `❌ The spellbook is locked in the wizard's tower! Try again.`;
@@ -588,38 +571,130 @@
       }
     }
 
-   
-    async function getMonster() {
+    async function getDungeonBeast() {
       showLoading();
       try {
-        // Get random monster
-        const listRes = await fetch("https://www.dnd5eapi.co/api/monsters");
-        const listData = await listRes.json();
-        const randomMonster = listData.results[Math.floor(Math.random() * listData.results.length)];
+        const res = await fetch("https://www.dnd5eapi.co/api/2014/monsters");
+        const data = await res.json();
+        const random = data.results[Math.floor(Math.random() * data.results.length)];
         
-        const monsterRes = await fetch("https://www.dnd5eapi.co" + randomMonster.url);
+        const monsterRes = await fetch("https://www.dnd5eapi.co" + random.url);
         const monsterData = await monsterRes.json();
 
-        document.getElementById("output").innerHTML = 
-          `<i class="fas fa-skull-crossbones"></i> <strong>${monsterData.name}</strong><br>
-          <small>Size: ${monsterData.size} | Type: ${monsterData.type} | CR: ${monsterData.challenge_rating}</small><br><br>
-          <em>"${monsterData.desc ? monsterData.desc.substring(0, 300) + '...' : 'A fearsome creature lurketh in the shadows!'}"</em>`;
+        currentDefender = {
+          name: monsterData.name,
+          hp: monsterData.hit_points || 10
+        };
 
-        stats.monsters++;
-        updateStats();
+        document.getElementById("defenderInfo").innerHTML = 
+          `<strong>🛡️ Defender:</strong> ${monsterData.name}<br>HP: ${monsterData.hit_points || 10}`;
+        
+        updateBattleUI();
+        
+        document.getElementById("output").innerHTML = 
+          `<i class="fas fa-skull-crossbones"></i> <strong>${monsterData.name}</strong> appears!<br>
+          <small>HP: ${monsterData.hit_points || 10}</small><br><br>
+          <em>"A fearsome creature lurks in the shadows, ready to defend its lair!"</em>`;
 
       } catch (err) {
         document.getElementById("output").innerHTML = 
-          `❌ The dungeon master hides the bestiary! Try again, brave hero.`;
+          `❌ Could not summon dungeon beast!`;
       } finally {
         hideLoading('Dungeon Beast');
       }
     }
 
-    
-    document.querySelectorAll('.btnGame').forEach(btn => {
+    async function getAttacker() {
+      showLoading();
+      try {
+        const res = await fetch("https://www.dnd5eapi.co/api/2014/monsters");
+        const data = await res.json();
+        const random = data.results[Math.floor(Math.random() * data.results.length)];
+        
+        const monsterRes = await fetch("https://www.dnd5eapi.co" + random.url);
+        const monsterData = await monsterRes.json();
+
+        currentAttacker = {
+          name: monsterData.name,
+          hp: monsterData.hit_points || 15
+        };
+
+        document.getElementById("attackerInfo").innerHTML = 
+          `<strong>⚔️ Attacker:</strong> ${monsterData.name}<br>HP: ${monsterData.hit_points || 15}`;
+        
+        updateBattleUI();
+
+        document.getElementById("output").innerHTML = 
+          `<i class="fas fa-fist-raised"></i> <strong>${monsterData.name}</strong> charges forward!<br>
+          <small>HP: ${monsterData.hit_points || 15}</small><br><br>
+          <em>"The attacker seeks battle glory!"</em>`;
+
+      } catch (err) {
+        document.getElementById("output").innerHTML = 
+          `❌ Could not summon attacker!`;
+      } finally {
+        hideLoading('Attacker Summoned');
+      }
+    }
+
+    function updateBattleUI() {
+      const battleInfo = document.getElementById('battleInfo');
+      const battleBtn = document.getElementById('battleBtn');
+      
+      if (currentDefender && currentAttacker) {
+        battleInfo.style.display = 'block';
+        battleBtn.disabled = false;
+      } else {
+        battleInfo.style.display = 'none';
+        battleBtn.disabled = true;
+      }
+    }
+
+    async function getBattle() {
+      if (!currentDefender || !currentAttacker) {
+        document.getElementById("output").innerHTML = "⚠️ Select both Dungeon Beast and Attacker first!";
+        return;
+      }
+
+      showLoading();
+      
+      // Simulate battle
+      const defenderDamage = Math.floor(Math.random() * 20) + 5;
+      const attackerDamage = Math.floor(Math.random() * 15) + 3;
+      
+      const defenderRemaining = Math.max(0, currentDefender.hp - defenderDamage);
+      const attackerRemaining = Math.max(0, currentAttacker.hp - attackerDamage);
+
+      let battleResult = `⚔️ <strong>BATTLE!</strong><br><br>`;
+      battleResult += `<strong>${currentAttacker.name}</strong> attacks ${currentDefender.name}!<br>`;
+      battleResult += `Attacker deals ${defenderDamage} damage! (${currentDefender.hp} → ${defenderRemaining} HP)<br><br>`;
+      battleResult += `<strong>${currentDefender.name}</strong> counterattacks!<br>`;
+      battleResult += `Defender deals ${attackerDamage} damage! (${currentAttacker.hp} → ${attackerRemaining} HP)<br><br>`;
+
+      if (defenderRemaining === 0 && attackerRemaining === 0) {
+        battleResult += `💥 <strong>MUTUAL DESTRUCTION!</strong> Both warriors fall!`;
+      } else if (defenderRemaining === 0) {
+        battleResult += `🏆 <strong>Victory!</strong> ${currentAttacker.name} defeats ${currentDefender.name}!`;
+      } else if (attackerRemaining === 0) {
+        battleResult += `🛡️ <strong>Defender holds!</strong> ${currentDefender.name} repels ${currentAttacker.name}!`;
+      } else {
+        battleResult += `⚔️ <strong>Battle continues!</strong><br>${currentAttacker.name}: ${attackerRemaining} HP | ${currentDefender.name}: ${defenderRemaining} HP`;
+      }
+
+      document.getElementById("output").innerHTML = battleResult;
+      
+      // Reset battle
+      setTimeout(() => {
+        currentDefender = null;
+        currentAttacker = null;
+        updateBattleUI();
+        hideLoading('EPIC BATTLE');
+      }, 5000);
+    }
+
+    // Sound effects
+    document.querySelectorAll('.btnGame, .btnBattle').forEach(btn => {
       btn.addEventListener('click', function() {
-        // Create sword swing sound
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
@@ -638,70 +713,7 @@
       });
     });
 
-   
-    const title = document.querySelector('.mainTitle');
-    let clickCount = 0;
-    title.addEventListener('click', function() {
-      clickCount++;
-      if (clickCount === 2) {
-        document.getElementById('output').innerHTML = 
-          `🧙‍♂️ <strong>Secret revealed!</strong> You found the hidden DM note:<br>
-          "Roll for initiative... and remember, the dice gods favor the bold!"`;  
-        document.getElementById('outputType').textContent = 'DM Whisper';
-        document.getElementById('outputType').style.display = 'block';
-        clickCount = 0;
-      }
-    });
-
-    
-    function animateStat(statId, target) {
-      const stat = document.getElementById(statId);
-      const start = parseInt(stat.textContent);
-      const increment = target > start ? 1 : -1;
-      let current = start;
-      
-      const timer = setInterval(() => {
-        current += increment;
-        stat.textContent = current;
-        if (current === target) clearInterval(timer);
-      }, 50);
-    }
-
-    
-    const originalUpdateStats = updateStats;
-    updateStats = function() {
-      animateStat('jokeCount', stats.jokes);
-      animateStat('spellCount', stats.spells);
-      animateStat('monsterCount', stats.monsters);
-    };
-
-  
-    window.addEventListener('load', function() {
-      const welcomeText = document.getElementById('output');
-      const texts = [
-        '⚔️ Ready for adventure? Click a button to begin your quest!',
-        '🏰 Explore ancient dungeons and hear tales from wandering bards...',
-        '🎲 Your destiny awaits in the Dragon\'s Lair!'
-      ];
-      let index = 0;
-      
-      const typeWriter = () => {
-        if (index < texts.length) {
-          welcomeText.textContent = texts[index];
-          index++;
-          setTimeout(typeWriter, 3000);
-        }
-      };
-      setTimeout(typeWriter, 1000);
-    });
-
-  
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      deferredPrompt = e;
-    });
-
-    
+    // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
       switch(e.key.toLowerCase()) {
         case 'j':
@@ -714,32 +726,37 @@
           break;
         case 'm':
           e.preventDefault();
-          getMonster();
+          getDungeonBeast();
+          break;
+        case 'a':
+          e.preventDefault();
+          getAttacker();
+          break;
+        case 'b':
+          e.preventDefault();
+          getBattle();
           break;
       }
     });
-    async function getMonster() {
-      try {
-   
-    const res = await fetch("https://www.dnd5eapi.co/api/2014/monsters");
-    const data = await res.json();
 
-   
-    const random = data.results[Math.floor(Math.random() * data.results.length)];
-
-    
-    const monsterRes = await fetch("https://www.dnd5eapi.co" + random.url);
-    const monsterData = await monsterRes.json();
-
-    
-    document.getElementById("monster").innerText =
-      monsterData.name + " (HP: " + monsterData.hit_points + ")";
-
-  } catch (err) {
-    document.getElementById("monster").innerText = "Error loading monster";
-  }
-}
-</script>
+    window.addEventListener('load', function() {
+      const welcomeText = document.getElementById('output');
+      const texts = [
+        '⚔️ Ready for adventure? Click a button to begin your quest!',
+        '🏰 Explore ancient dungeons and hear tales from wandering bards...',
+        '🎲 Your destiny awaits in the Dragon\'s Lair! (J= Joke, S= Spell, M= Monster, A= Attacker, B= Battle)'
+      ];
+      let index = 0;
+      
+      const typeWriter = () => {
+        if (index < texts.length) {
+          welcomeText.textContent = texts[index];
+          index++;
+          setTimeout(typeWriter, 3000);
+        }
+      };
+      setTimeout(typeWriter, 1000);
+    });
   </script>
 </body>
 </html>
