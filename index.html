@@ -406,6 +406,34 @@
     ::-webkit-scrollbar-thumb:hover {
       background: var(--secondary-gold);
     }
+
+    .tavernContainer {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  z-index: 9999;
+}
+
+.tavernBtn {
+  min-height: 60px;
+  padding: 0.8rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+.tavernOutput {
+  background: rgba(0,0,0,0.85);
+  border: 2px solid var(--primary-gold);
+  border-radius: 10px;
+  padding: 10px 15px;
+  max-width: 250px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  color: var(--parchment);
+  display: none;
+}
   </style>
 </head>
 
@@ -460,7 +488,7 @@
       <div class="gameContainer">
         <div class="row g-3 justify-content-center mb-4">
           <div class="col-md-3 col-12">
-            <button onclick="getJoke()" class="btn btnGame btnJoke w-100">
+          
               <i class="fas fa-laugh"></i> Tavern Tale
             </button>
           </div>
@@ -504,6 +532,15 @@
           <div id="outputType" class="outputType" style="display: none;"></div>
           <div id="output">⚔️ Ready for adventure? Click a button to begin your quest!</div>
         </div>
+      </div>
+    </div>
+  </div>
+  <div class="tavernContainer">
+    <button onclick="getJokeSide()" class="btnGamne btnJoke tavernBtn">
+      <i class="fas fa-laugh"></i> Tavern Tale
+    </button>
+    <div id="tavernOutput" class="tavernOutput">
+      Tavern Tale
       </div>
     </div>
   </div>
@@ -757,6 +794,25 @@
       };
       setTimeout(typeWriter, 1000);
     });
+
+    async function getJokeSide() {
+  const output = document.getElementById("tavernOutput");
+  output.style.display = "block";
+  output.innerHTML = "🍺 The bard is thinking...";
+
+  try {
+    const res = await fetch("https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit");
+    const data = await res.json();
+
+    let joke = data.type === "single"
+      ? data.joke
+      : `${data.setup}<br><br>${data.delivery}`;
+
+    output.innerHTML = `<strong>${joke}</strong>`;
+  } catch (err) {
+    output.innerHTML = "❌ The bard forgot the story!";
+  }
+}
   </script>
 </body>
 </html>
