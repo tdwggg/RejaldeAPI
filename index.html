@@ -1,818 +1,481 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DnD</title>
-
-  <!-- Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <style>
-    :root {
-      --primary-gold: #D4AF37;
-      --secondary-gold: #B8860B;
-      --dark-stone: #2C2C2C;
-      --stone-gray: #4A4A4A;
-      --parchment: #F5DEB3;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      background-image: url('BG.jpg');
-      background-attachment: fixed;
-      background-size: cover;
-      background-position: center;
-      font-family: 'Orbitron', monospace;
-      color: var(--parchment);
-      overflow-x: hidden;
-      position: relative;
-      padding-top: 76px; /* Fixed navbar height */
-      min-height: 100vh;
-    }
-
-  
-    .navbar {
-      background: linear-gradient(135deg, rgba(12,12,12,0.95), rgba(26,26,46,0.95)) !important;
-      backdrop-filter: blur(10px);
-      border-bottom: 2px solid var(--primary-gold);
-      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.2);
-      padding: 0.5rem 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1030;
-    }
-
-    .navbar-brand {
-      font-family: 'Cinzel', serif;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--primary-gold) !important;
-      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-      transition: all 0.3s ease;
-    }
-
-    .navbar-brand:hover {
-      color: var(--secondary-gold) !important;
-      transform: scale(1.05);
-    }
-
-    .navbar-nav .nav-link {
-      font-family: 'Orbitron', monospace;
-      font-weight: 600;
-      color: var(--parchment) !important;
-      margin: 0 0.5rem;
-      padding: 0.75rem 1.25rem !important;
-      border-radius: 10px;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .navbar-nav .nav-link::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.2), transparent);
-      transition: left 0.5s;
-    }
-
-    .navbar-nav .nav-link:hover::before {
-      left: 100%;
-    }
-
-    .navbar-nav .nav-link:hover {
-      color: var(--primary-gold) !important;
-      background: rgba(212, 175, 55, 0.1);
-      transform: translateY(-2px);
-    }
-
-    .navbar-toggler {
-      border: 2px solid var(--primary-gold);
-      border-radius: 8px;
-    }
-
-    .navbar-toggler:focus {
-      box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
-    }
-
-    /* Animated background elements */
-    .bgAnimation {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 0.1;
-    }
-
-    .floatingParticle {
-      position: absolute;
-      animation: float 20s infinite linear;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-    }
-
-    .mainTitle {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      background: linear-gradient(45deg, var(--primary-gold), #FFD700, var(--secondary-gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
-      text-align: center;
-      margin-bottom: 2rem;
-      animation: glow 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes glow {
-      from { filter: drop-shadow(0 0 20px var(--primary-gold)); }
-      to { filter: drop-shadow(0 0 30px var(--primary-gold)); }
-    }
-
-    .subtitle {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(1.2rem, 4vw, 2rem);
-      color: var(--primary-gold);
-      text-align: center;
-      margin-bottom: 3rem;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-    }
-
-    .mainContent {
-      min-height: calc(100vh - 76px);
-      padding-bottom: 2rem;
-    }
-
-    .gameContainer {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2rem;
-      background: rgba(42, 42, 42, 0.9);
-      border-radius: 20px;
-      border: 2px solid var(--primary-gold);
-      box-shadow: 
-        0 0 50px rgba(212, 175, 55, 0.3),
-        inset 0 0 50px rgba(0,0,0,0.5);
-      backdrop-filter: blur(10px);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .gameContainer::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, transparent 40%, rgba(212, 175, 55, 0.1) 50%);
-      animation: rotate 20s linear infinite;
-      z-index: 0;
-    }
-
-    @keyframes rotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .gameContainer > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .btnGame {
-      font-family: 'Orbitron', monospace;
-      font-weight: 700;
-      font-size: 1.2rem;
-      padding: 1rem 2rem;
-      margin: 0.5rem;
-      border: none;
-      border-radius: 15px;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      position: relative;
-      overflow: hidden;
-      min-height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .btnGame::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.5s;
-    }
-
-    .btnGame:hover::before {
-      left: 100%;
-    }
-
-    .btnJoke {
-      background: linear-gradient(145deg, #FF6B35, #F7931E);
-      box-shadow: 
-        0 10px 30px rgba(255, 107, 53, 0.4),
-        inset 0 1px 0 rgba(255,255,255,0.3);
-      color: white;
-    }
-
-    .btnJoke:hover {
-      transform: translateY(-5px);
-      box-shadow: 
-        0 20px 40px rgba(255, 107, 53, 0.6),
-        inset 0 1px 0 rgba(255,255,255,0.4);
-      background: linear-gradient(145deg, #FF8E53, #F9A825);
-    }
-
-    .btnSpell {
-      background: linear-gradient(145deg, #6A4C93, #8E44AD);
-      box-shadow: 
-        0 10px 30px rgba(106, 76, 147, 0.4),
-        inset 0 1px 0 rgba(255,255,255,0.3);
-      color: white;
-    }
-
-    .btnSpell:hover {
-      transform: translateY(-5px);
-      box-shadow: 
-        0 20px 40px rgba(106, 76, 147, 0.6),
-        inset 0 1px 0 rgba(255,255,255,0.4);
-      background: linear-gradient(145deg, #7F5BB2, #A569BD);
-    }
-
-    .btnMonster {
-      background: linear-gradient(145deg, #2E8B57, #228B22);
-      box-shadow: 
-        0 10px 30px rgba(46, 139, 87, 0.4),
-        inset 0 1px 0 rgba(255,255,255,0.3);
-      color: white;
-    }
-
-    .btnMonster:hover {
-      transform: translateY(-5px);
-      box-shadow: 
-        0 20px 40px rgba(46, 139, 87, 0.6),
-        inset 0 1px 0 rgba(255,255,255,0.4);
-      background: linear-gradient(145deg, #3AA77A, #32CD32);
-    }
-
-    .btnBattle {
-      background: linear-gradient(145deg, #DC143C, #B22222);
-      box-shadow: 
-        0 10px 30px rgba(220, 20, 60, 0.4),
-        inset 0 1px 0 rgba(255,255,255,0.3);
-      color: white;
-      font-family: 'Orbitron', monospace;
-      font-weight: 700;
-      font-size: 1.2rem;
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 15px;
-      min-height: 70px;
-      width: 100%;
-    }
-
-    .btnBattle:hover {
-      transform: translateY(-5px);
-      box-shadow: 
-        0 20px 40px rgba(220, 20, 60, 0.6),
-        inset 0 1px 0 rgba(255,255,255,0.4);
-      background: linear-gradient(145deg, #FF4040, #DC143C);
-    }
-
-    .battleInfo {
-      background: rgba(220, 20, 60, 0.2);
-      border: 2px solid #DC143C;
-      border-radius: 15px;
-      padding: 1rem;
-      margin: 1rem 0;
-      color: var(--parchment);
-      font-family: 'Cinzel', serif;
-      font-size: 1.1rem;
-    }
-
-    .outputContainer {
-      margin-top: 3rem;
-      padding: 2rem;
-      background: linear-gradient(145deg, rgba(75,75,75,0.8), rgba(20,20,20,0.9));
-      border-radius: 15px;
-      border: 1px solid var(--primary-gold);
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.7);
-      min-height: 200px;
-      position: relative;
-    }
-
-    #output {
-      font-family: 'Cinzel', serif;
-      font-size: 1.3rem;
-      line-height: 1.6;
-      color: var(--parchment);
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-      white-space: pre-wrap;
-    }
-
-    .outputType {
-      position: absolute;
-      top: -10px;
-      left: 20px;
-      background: var(--primary-gold);
-      color: #000;
-      padding: 5px 15px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .loading {
-      display: none;
-      text-align: center;
-      font-size: 1.2rem;
-      color: var(--primary-gold);
-    }
-
-    .loading i {
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-
-    @media (max-width: 768px) {
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Philippines Population & Poverty (Student Demo)</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <style>
       body {
-        padding-top: 70px;
-      }
-      
+  background: url("Bgpoverty.jpg")
+    center center / cover no-repeat fixed;
+        color: #f1f5f9;
+
       .navbar {
-        padding: 0.25rem 0;
+        background-color: rgba(164, 156, 156, 0.82) !important;
+        backdrop-filter: blur(10px);
       }
-      
-      .gameContainer {
-        margin: 1rem;
-        padding: 1.5rem;
+
+      .navbar .navbar-brand,
+      .navbar .nav-link {
+        color: #0b1220 !important;
+        font-weight: 700;
       }
-      
-      .btnGame, .btnBattle {
-        font-size: 1rem;
-        padding: 0.8rem 1.5rem;
-        width: 100%;
-        margin: 0.25rem 0;
+      .navbar .nav-link:hover {
+        color: #111827 !important;
       }
-    }
 
-    /* Scrollbar styling */
-    ::-webkit-scrollbar {
-      width: 12px;
-    }
+      .heroBg {
+        background: rgba(11, 18, 32, 0.75) !important; /* darker overlay */
+      }
+      .heroBg h1,
+      .heroBg p,
+      .heroBg .badge {
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
 
-    ::-webkit-scrollbar-track {
-      background: var(--dark-stone);
-    }
+      }
+      .navbar {
+        background: rgba(0, 0, 0, 0.6);
+        border: 0;
+        border-radius: 0;
+        padding: 1rem 2rem;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .navbar .navbar-brand {
+        color: #f1f5f9;
+        font-size: 1.5rem;
+      }
+       .navbar .nav-link {
+        color: #e2e8f0;
+      }
+       .navbar .nav-link:hover {
+        color: #fff;
+      }
+       .btn {
+        border-radius: 12px;
+        padding: 0.5rem 1.25rem;
+      }
+       .btn-primary {
+        background-color: #2563eb;
+        border-color: #2563eb;
+      }
+       .btn-primary:hover {
+        background-color: #1d4ed8;
+        border-color: #1d4ed8;
+      }
+       .btn-success {
+        background-color: #16a34a;
+        border-color: #16a34a;
+      }
+       .btn-success:hover {
+        background-color: #15803d;
+        border-color: #15803d;
+      }
 
-    ::-webkit-scrollbar-thumb {
-      background: var(--primary-gold);
-      border-radius: 6px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--secondary-gold);
-    }
-
-    .tavernContainer {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  z-index: 9999;
-}
-
-.tavernBtn {
-  min-height: 60px;
-  padding: 0.8rem 1.2rem;
-  font-size: 0.9rem;
-}
-
-.tavernOutput {
-  background: rgba(0,0,0,0.85);
-  border: 2px solid var(--primary-gold);
-  border-radius: 10px;
-  padding: 10px 15px;
-  max-width: 250px;
-  font-family: 'Cinzel', serif;
-  font-size: 0.9rem;
-  color: var(--parchment);
-  display: none;
-}
-  </style>
-</head>
-
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-      <a class="navbar-brand" href="#">
-        <i></i> Dragon's Lair
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="index.html">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="adventures.html">Adventures</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="spell.html">Spells</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="monster.html">Monsters</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Animated background -->
-  <div class="bgAnimation">
-    <div class="floatingParticle" style="left: 10%; animation-delay: 0s; font-size: 2rem;">⭐</div>
-    <div class="floatingParticle" style="left: 20%; animation-delay: 2s; font-size: 1.5rem;">⚡</div>
-    <div class="floatingParticle" style="left: 40%; animation-delay: 5s; font-size: 2.5rem;">🗡️</div>
-    <div class="floatingParticle" style="left: 60%; animation-delay: 8s; font-size: 1.8rem;">💎</div>
-    <div class="floatingParticle" style="left: 80%; animation-delay: 12s; font-size: 2rem;">🔥</div>
-    <div class="floatingParticle" style="left: 90%; animation-delay: 15s; font-size: 1.2rem;">✨</div>
-  </div>
-
-  <div class="mainContent">
-    <div class="container-fluid p-4">
-      <div class="mainTitle">
-        <i></i> Dragon's Lair
-      </div>
-      
-      <p class="subtitle">
-        Unleash Epic Adventures & Epic Laughs
-      </p>
-
-      <div class="gameContainer">
-        <div class="row g-3 justify-content-center mb-4">
-          <div class="col-md-3 col-12">
-          
-              <i class="fas fa-laugh"></i> Tavern Tale
-            </button>
-          </div>
-          <div class="col-md-3 col-12">
-            <button onclick="getSpell()" class="btn btnGame btnSpell w-100">
-              <i class="fas fa-magic"></i> Arcane Spell
-            </button>
-          </div>
-          <div class="col-md-3 col-12">
-            <button onclick="getDungeonBeast()" class="btn btnGame btnMonster w-100">
-              <i class="fas fa-skull"></i> Dungeon Beast
-            </button>
-          </div>
-          <div class="col-md-3 col-12">
-            <button onclick="getAttacker()" class="btn btnGame btnBattle w-100">
-              <i class="fas fa-fist-raised"></i> Get Attacker
-            </button>
-          </div>
+      .heroCard {
+        border: 0;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .heroBg {
+        background-color: #3a3b3c;
+        border-radius: 14px;
+      }
+      .kpi {
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+      }
+      .card {
+        border-radius: 14px;
+      }
+      .table thead th {
+        background: #0b1220;
+        color: #fff;
+      }
+      .badgeSoft {
+        background: #f1f5f9;
+        color: #0f172a;
+        border: 1px solid #e2e8f0;
+      }
+      .smallHint {
+        color: #64748b;
+      }
+      .stickyTopPanel {
+        position: sticky;
+        top: 0.75rem;
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          "Courier New", monospace;
+      }
+      .card {
+        background-color: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(226, 232, 240, 0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-white border-bottom">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">Talakayin</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#nav"
+          aria-controls="nav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="#regions">Regions</a></li>
+            <li class="nav-item"><a class="nav-link" href="#cities">Cities</a></li>
+            <li class="nav-item"><a class="nav-link" href="senators.html">Senators</a></li>
+          </ul>
         </div>
+      </div>
+    </nav>
 
-        <div class="row g-3 justify-content-center mb-4">
-          <div class="col-md-5 col-12">
-            <div class="battleInfo" id="battleInfo" style="display: none;">
-              <strong><i class="fas fa-dragon"></i> Battle Ready!</strong><br>
-              <span id="defenderInfo"></span><br>
-              <span id="attackerInfo"></span>
+    <header class="container my-4">
+      <div class="card heroCard shadow-sm">
+        <div class="heroBg text-white p-4 p-md-5">
+          <div class="row g-4 align-items-center">
+            <div class="col-lg-7">
+              <h1 class="display-6 fw-bold mb-2">Population and the Poverty Rate of the Filipinos</h1>
+              <p class="mb-0 opacity-75">
+                Let the data tell the story! Never be silenced.
+              </p>
+              <div class="mt-3 d-flex flex-wrap gap-2">
+              </div>
+            </div>
+            <div class="col-lg-5">
+              <div class="kpi p-3">
+                <div class="row g-3">
+                  <div class="col-6">
+                    <div class="fw-semibold">Regions</div>
+                    <div class="fs-4 fw-bold" id="kpiRegions">—</div>
+                  </div>
+                  <div class="col-6">
+                    <div class="fw-semibold">Cities</div>
+                    <div class="fs-4 fw-bold" id="kpiCities">—</div>
+                  </div>
+                  <div class="col-12">
+                    <div class="small opacity-75">
+                      Status:
+                      <span class="mono" id="statusText">loading…</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="col-md-3 col-12">
-            <button onclick="getBattle()" class="btn btnGame btnBattle w-100" id="battleBtn" disabled>
-              <i class="fas fa-fire"></i> BATTLE!
-            </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container pb-5">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="stickyTopPanel">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title mb-2">Statistics</h5>
+
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary" id="btnLoadRegions" type="button">
+                    Region Statistics
+                  </button>
+                  <button class="btn btn-success" id="btnLoadCities" type="button">
+                    City
+                  </button>
+                </div>
+
+                <hr />
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="loading" id="loading">
-          <i class="fas fa-spinner"></i> Summoning Adventure...
-        </div>
+        <div class="col-lg-8">
+          <section id="regions" class="mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h3 class="h4 mb-0">Regions</h3>
+              <span class="badge text-bg-light border" id="regionsBadge">not loaded</span>
+            </div>
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead>
+                      <tr>
+                        <th style="min-width: 180px">Region</th>
+                        <th class="text-end">Population (2020)</th>
+                        <th class="text-end">Poverty incidence (2021)</th>
+                      </tr>
+                    </thead>
+                    <tbody id="regionsTableBody">
+                      <tr>
+                        <td colspan="3" class="text-muted">Click “Load region stats”.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="mt-3 smallHint" id="regionsFootnote"></div>
+              </div>
+            </div>
+          </section>
 
-        <div class="outputContainer">
-          <div id="outputType" class="outputType" style="display: none;"></div>
-          <div id="output">⚔️ Ready for adventure? Click a button to begin your quest!</div>
+          <section id="cities" class="mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h3 class="h4 mb-0">Cities / Municipalities</h3>
+              <span class="badge text-bg-light border" id="citiesBadge">not loaded</span>
+            </div>
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div class="row g-3" id="citiesCards">
+                  <div class="col-12 text-muted">Click “Load city population (live)”.</div>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="tavernContainer">
-    <button onclick="getJokeSide()" class="btnGamne btnJoke tavernBtn">
-      <i class="fas fa-laugh"></i> Tavern Tale
-    </button>
-    <div id="tavernOutput" class="tavernOutput">
-      Tavern Tale
-      </div>
-    </div>
-  </div>
+    </main>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <script>
-    let currentDefender = null;
-    let currentAttacker = null;
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
 
-    function showLoading() {
-      document.getElementById('loading').style.display = 'block';
-      document.getElementById('outputType').style.display = 'none';
-    }
+    <script>
+      const appState = {
+        regions: [],
+        cities: []
+      };
 
-    function hideLoading(type) {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('outputType').style.display = 'block';
-      document.getElementById('outputType').textContent = type;
-    }
+      const api = {
+        regionsStats: async () => {
+          // Population source: Philippine Statistics Authority (PSA) 2020 Census of Population and Housing (CPH).
+          // https://psa.gov.ph/population-and-housing
+          // Poverty source: PSA Poverty Incidence among Families (by Region), 2021.
+          // https://psa.gov.ph/poverty-press-releases
+          return {
+            countryName: "Philippines",
+            populationYear: 2020,
+            povertyYear: 2021,
+            rows: [
+              { regionCode: "NCR", regionName: "National Capital Region (NCR)", population: 13484462, povertyIncidencePercent: 2.4 },
+              { regionCode: "CAR", regionName: "Cordillera Administrative Region (CAR)", population: 1797660, povertyIncidencePercent: 6.1 },
+              { regionCode: "I", regionName: "Ilocos Region (Region I)", population: 5301139, povertyIncidencePercent: 10.1 },
+              { regionCode: "II", regionName: "Cagayan Valley (Region II)", population: 3685744, povertyIncidencePercent: 10.0 },
+              { regionCode: "III", regionName: "Central Luzon (Region III)", population: 12422172, povertyIncidencePercent: 6.0 },
+              { regionCode: "IV-A", regionName: "CALABARZON (Region IV-A)", population: 16019599, povertyIncidencePercent: 5.6 },
+              { regionCode: "IV-B", regionName: "MIMAROPA (Region IV-B)", population: 3228558, povertyIncidencePercent: 14.8 },
+              { regionCode: "V", regionName: "Bicol Region (Region V)", population: 6082165, povertyIncidencePercent: 20.0 },
+              { regionCode: "VI", regionName: "Western Visayas (Region VI)", population: 7954723, povertyIncidencePercent: 16.3 },
+              { regionCode: "VII", regionName: "Central Visayas (Region VII)", population: 8081988, povertyIncidencePercent: 16.0 },
+              { regionCode: "VIII", regionName: "Eastern Visayas (Region VIII)", population: 4547150, povertyIncidencePercent: 21.5 },
+              { regionCode: "IX", regionName: "Zamboanga Peninsula (Region IX)", population: 3875576, povertyIncidencePercent: 24.0 },
+              { regionCode: "X", regionName: "Northern Mindanao (Region X)", population: 5022768, povertyIncidencePercent: 16.5 },
+              { regionCode: "XI", regionName: "Davao Region (Region XI)", population: 5243536, povertyIncidencePercent: 10.9 },
+              { regionCode: "XII", regionName: "SOCCSKSARGEN (Region XII)", population: 4901894, povertyIncidencePercent: 20.4 },
+              { regionCode: "XIII", regionName: "Caraga (Region XIII)", population: 2804125, povertyIncidencePercent: 24.1 },
+              { regionCode: "BARMM", regionName: "Bangsamoro (BARMM)", population: 4404044, povertyIncidencePercent: 31.2 }
+            ]
+          };
+        },
 
-    async function getJoke() {
-      showLoading();
-      try {
-        const res = await fetch("https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit");
-        const data = await res.json();
-
-        let joke = data.type === "single"
-          ? data.joke
-          : `${data.setup}\n\n${data.delivery}`;
-
-        document.getElementById("output").innerHTML = 
-          `<i class="fas fa-volume-up"></i> <strong>${joke}</strong>`;
-        
-      } catch (err) {
-        document.getElementById("output").innerHTML = 
-          `❌ The bard's lute string broke! Try again, adventurer.`;
-      } finally {
-        hideLoading('Tavern Tale');
-      }
-    }
-
-    async function getSpell() {
-      showLoading();
-      try {
-        const listRes = await fetch("https://www.dnd5eapi.co/api/spells");
-        const listData = await listRes.json();
-        const randomSpell = listData.results[Math.floor(Math.random() * listData.results.length)];
-        
-        const spellRes = await fetch("https://www.dnd5eapi.co" + randomSpell.url);
-        const spellData = await spellRes.json();
-
-        const desc = spellData.desc.join(' ').substring(0, 400) + 
-                    (spellData.desc.join(' ').length > 400 ? '...' : '');
-        
-        document.getElementById("output").innerHTML = 
-          `<i class="fas fa-hat-wizard"></i> <strong>${spellData.name}</strong><br><small>Level ${spellData.level}</small><br><br>${desc}`;
-
-      } catch (err) {
-        document.getElementById("output").innerHTML = 
-          `❌ The spellbook is locked in the wizard's tower! Try again.`;
-      } finally {
-        hideLoading('Arcane Spell');
-      }
-    }
-
-    async function getDungeonBeast() {
-      showLoading();
-      try {
-        const res = await fetch("https://www.dnd5eapi.co/api/2014/monsters");
-        const data = await res.json();
-        const random = data.results[Math.floor(Math.random() * data.results.length)];
-        
-        const monsterRes = await fetch("https://www.dnd5eapi.co" + random.url);
-        const monsterData = await monsterRes.json();
-
-        currentDefender = {
-          name: monsterData.name,
-          hp: monsterData.hit_points || 10
-        };
-
-        document.getElementById("defenderInfo").innerHTML = 
-          `<strong>🛡️ Defender:</strong> ${monsterData.name}<br>HP: ${monsterData.hit_points || 10}`;
-        
-        updateBattleUI();
-        
-        document.getElementById("output").innerHTML = 
-          `<i class="fas fa-skull-crossbones"></i> <strong>${monsterData.name}</strong> appears!<br>
-          <small>HP: ${monsterData.hit_points || 10}</small><br><br>
-          <em>"A fearsome creature lurks in the shadows, ready to defend its lair!"</em>`;
-
-      } catch (err) {
-        document.getElementById("output").innerHTML = 
-          `❌ Could not summon dungeon beast!`;
-      } finally {
-        hideLoading('Dungeon Beast');
-      }
-    }
-
-    async function getAttacker() {
-      showLoading();
-      try {
-        const res = await fetch("https://www.dnd5eapi.co/api/2014/monsters");
-        const data = await res.json();
-        const random = data.results[Math.floor(Math.random() * data.results.length)];
-        
-        const monsterRes = await fetch("https://www.dnd5eapi.co" + random.url);
-        const monsterData = await monsterRes.json();
-
-        currentAttacker = {
-          name: monsterData.name,
-          hp: monsterData.hit_points || 15
-        };
-
-        document.getElementById("attackerInfo").innerHTML = 
-          `<strong>⚔️ Attacker:</strong> ${monsterData.name}<br>HP: ${monsterData.hit_points || 15}`;
-        
-        updateBattleUI();
-
-        document.getElementById("output").innerHTML = 
-          `<i class="fas fa-fist-raised"></i> <strong>${monsterData.name}</strong> charges forward!<br>
-          <small>HP: ${monsterData.hit_points || 15}</small><br><br>
-          <em>"The attacker seeks battle glory!"</em>`;
-
-      } catch (err) {
-        document.getElementById("output").innerHTML = 
-          `❌ Could not summon attacker!`;
-      } finally {
-        hideLoading('Attacker Summoned');
-      }
-    }
-
-    function updateBattleUI() {
-      const battleInfo = document.getElementById('battleInfo');
-      const battleBtn = document.getElementById('battleBtn');
-      
-      if (currentDefender && currentAttacker) {
-        battleInfo.style.display = 'block';
-        battleBtn.disabled = false;
-      } else {
-        battleInfo.style.display = 'none';
-        battleBtn.disabled = true;
-      }
-    }
-
-    async function getBattle() {
-      if (!currentDefender || !currentAttacker) {
-        document.getElementById("output").innerHTML = "⚠️ Select both Dungeon Beast and Attacker first!";
-        return;
-      }
-
-      showLoading();
-      
-      // Simulate battle
-      const defenderDamage = Math.floor(Math.random() * 20) + 5;
-      const attackerDamage = Math.floor(Math.random() * 15) + 3;
-      
-      const defenderRemaining = Math.max(0, currentDefender.hp - defenderDamage);
-      const attackerRemaining = Math.max(0, currentAttacker.hp - attackerDamage);
-
-      let battleResult = `⚔️ <strong>BATTLE!</strong><br><br>`;
-      battleResult += `<strong>${currentAttacker.name}</strong> attacks ${currentDefender.name}!<br>`;
-      battleResult += `Attacker deals ${defenderDamage} damage! (${currentDefender.hp} → ${defenderRemaining} HP)<br><br>`;
-      battleResult += `<strong>${currentDefender.name}</strong> counterattacks!<br>`;
-      battleResult += `Defender deals ${attackerDamage} damage! (${currentAttacker.hp} → ${attackerRemaining} HP)<br><br>`;
-
-      if (defenderRemaining === 0 && attackerRemaining === 0) {
-        battleResult += `💥 <strong>MUTUAL DESTRUCTION!</strong> Both warriors fall!`;
-      } else if (defenderRemaining === 0) {
-        battleResult += `🏆 <strong>Victory!</strong> ${currentAttacker.name} defeats ${currentDefender.name}!`;
-      } else if (attackerRemaining === 0) {
-        battleResult += `🛡️ <strong>Defender holds!</strong> ${currentDefender.name} repels ${currentAttacker.name}!`;
-      } else {
-        battleResult += `⚔️ <strong>Battle continues!</strong><br>${currentAttacker.name}: ${attackerRemaining} HP | ${currentDefender.name}: ${defenderRemaining} HP`;
-      }
-
-      document.getElementById("output").innerHTML = battleResult;
-      
-      // Reset battle
-      setTimeout(() => {
-        currentDefender = null;
-        currentAttacker = null;
-        updateBattleUI();
-        hideLoading('EPIC BATTLE');
-      }, 5000);
-    }
-
-    // Sound effects
-    document.querySelectorAll('.btnGame, .btnBattle').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-        
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-        
-        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-        oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
-        
-        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-        
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.1);
-      });
-    });
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
-      switch(e.key.toLowerCase()) {
-        case 'j':
-          e.preventDefault();
-          getJoke();
-          break;
-        case 's':
-          e.preventDefault();
-          getSpell();
-          break;
-        case 'm':
-          e.preventDefault();
-          getDungeonBeast();
-          break;
-        case 'a':
-          e.preventDefault();
-          getAttacker();
-          break;
-        case 'b':
-          e.preventDefault();
-          getBattle();
-          break;
-      }
-    });
-
-    window.addEventListener('load', function() {
-      const welcomeText = document.getElementById('output');
-      const texts = [
-        '⚔️ Ready for adventure? Click a button to begin your quest!',
-        '🏰 Explore ancient dungeons and hear tales from wandering bards...',
-        '🎲 Your destiny awaits in the Dragon\'s Lair! (J= Joke, S= Spell, M= Monster, A= Attacker, B= Battle)'
-      ];
-      let index = 0;
-      
-      const typeWriter = () => {
-        if (index < texts.length) {
-          welcomeText.textContent = texts[index];
-          index++;
-          setTimeout(typeWriter, 3000);
+        citiesPopulationLive: async () => {
+          // City population API source (live):
+          // https://countriesnow.space/api/v0.1/countries/population/cities
+          const res = await fetch("https://countriesnow.space/api/v0.1/countries/population/cities");
+          if (!res.ok) {
+            throw new Error(`Upstream API failed: ${res.status} ${res.statusText}`);
+          }
+          const data = await res.json();
+          const phOnly = (data.data || []).filter((x) => x.country === "Philippines");
+          return {
+            countryName: "Philippines",
+            level: "city",
+            rows: phOnly.map((x) => {
+              const counts = x.populationCounts || [];
+              const latest = counts[counts.length - 1] || {};
+              return {
+                cityName: x.city,
+                latestYear: latest.year ?? null,
+                latestPopulation: latest.value ?? null
+              };
+            })
+          };
         }
       };
-      setTimeout(typeWriter, 1000);
-    });
+      const els = {
+        statusText: document.getElementById("statusText"),
+        kpiRegions: document.getElementById("kpiRegions"),
+        kpiCities: document.getElementById("kpiCities"),
+        btnLoadRegions: document.getElementById("btnLoadRegions"),
+        btnLoadCities: document.getElementById("btnLoadCities"),
+        regionsTableBody: document.getElementById("regionsTableBody"),
+        regionsBadge: document.getElementById("regionsBadge"),
+        regionsFootnote: document.getElementById("regionsFootnote"),
+        citiesCards: document.getElementById("citiesCards"),
+        citiesBadge: document.getElementById("citiesBadge")
+      };
 
-    async function getJokeSide() {
-  const output = document.getElementById("tavernOutput");
-  output.style.display = "block";
-  output.innerHTML = "🍺 The bard is thinking...";
+      function setStatus(text) {
+        els.statusText.textContent = text;
+      }
 
-  try {
-    const res = await fetch("https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit");
-    const data = await res.json();
+      function formatInt(value) {
+        const num = Number(String(value).replaceAll(",", ""));
+        if (!Number.isFinite(num)) return String(value ?? "—");
+        return new Intl.NumberFormat().format(num);
+      }
 
-    let joke = data.type === "single"
-      ? data.joke
-      : `${data.setup}<br><br>${data.delivery}`;
+      function clampPercent(p) {
+        const n = Number(p);
+        if (!Number.isFinite(n)) return 0;
+        return Math.min(100, Math.max(0, n));
+      }
 
-    output.innerHTML = `<strong>${joke}</strong>`;
-  } catch (err) {
-    output.innerHTML = "❌ The bard forgot the story!";
-  }
-}
-  </script>
-</body>
+      function renderRegions() {
+        const rows = appState.regions;
+        els.kpiRegions.textContent = String(rows.length || "—");
+        if (!rows.length) return;
+
+        els.regionsBadge.textContent = `${rows.length} loaded`;
+        els.regionsTableBody.innerHTML = rows
+          .map((r) => {
+            const pct = clampPercent(r.povertyIncidencePercent);
+            return `
+              <tr>
+                <td>
+                  <div class="fw-semibold">${r.regionName}</div>
+                  <div class="smallHint">Code: <span class="mono">${r.regionCode}</span></div>
+                </td>
+                <td class="text-end fw-semibold">${formatInt(r.population)}</td>
+                <td class="text-end">
+                  <div class="d-flex flex-column align-items-end gap-1">
+                    <div class="fw-semibold">${pct.toFixed(1)}%</div>
+                    <div class="progress w-100" style="max-width: 220px; height: 10px;">
+                      <div class="progress-bar bg-danger" role="progressbar" style="width: ${pct}%;"></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        els.regionsFootnote.innerHTML =
+          "Region population (2020) and poverty incidence (2021) are shown as a simple snapshot for this demo.";
+      }
+
+      function renderCities() {
+        const rows = appState.cities;
+        els.kpiCities.textContent = String(appState.cities.length || "—");
+        els.citiesBadge.textContent = appState.cities.length ? `${appState.cities.length} loaded` : "not loaded";
+
+        if (!appState.cities.length) return;
+
+        const top = rows.slice(0, 18);
+        els.citiesCards.innerHTML = top
+          .map((c) => {
+            const populationText = c.latestPopulation ? formatInt(c.latestPopulation) : "—";
+            const yearText = c.latestYear ?? "—";
+            return `
+              <div class="col-md-6 col-xl-4">
+                <div class="card border-0 shadow-sm h-100">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                      <div>
+                        <div class="fw-semibold">${c.cityName}</div>
+                        <div class="smallHint">Latest year: ${yearText}</div>
+                      </div>
+                      <span class="badge text-bg-light border">city</span>
+                    </div>
+                    <hr class="my-2" />
+                    <div class="fs-5 fw-bold">${populationText}</div>
+                    <div class="smallHint">Population (latest available)</div>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+
+        if (rows.length > top.length) {
+          els.citiesCards.innerHTML += `
+            <div class="col-12">
+              <div class="smallHint mt-2">
+                Showing ${top.length} of ${rows.length} matches. Use search to narrow down.
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      async function loadRegions() {
+        els.btnLoadRegions.disabled = true;
+        setStatus("loadingRegions…");
+        try {
+          const data = await api.regionsStats();
+          appState.regions = data.rows || [];
+          renderRegions();
+          setStatus("regionsLoaded");
+        } catch (e) {
+          setStatus(`regionsError: ${String(e)}`);
+          els.regionsBadge.textContent = "error";
+          els.regionsTableBody.innerHTML =
+            '<tr><td colspan="3" class="text-danger">Failed to load region stats.</td></tr>';
+        } finally {
+          els.btnLoadRegions.disabled = false;
+          els.kpiRegions.textContent = String(appState.regions.length || "—");
+        }
+      }
+
+      async function loadCities() {
+        els.btnLoadCities.disabled = true;
+        setStatus("loadingCities…");
+        els.citiesCards.innerHTML =
+          '<div class="col-12"><div class="alert alert-info mb-0">Loading live city population…</div></div>';
+        try {
+          const data = await api.citiesPopulationLive();
+          appState.cities = data.rows || [];
+          renderCities();
+          setStatus("citiesLoaded");
+        } catch (e) {
+          setStatus(`citiesError: ${String(e)}`);
+          els.citiesBadge.textContent = "error";
+          els.citiesCards.innerHTML =
+            '<div class="col-12"><div class="alert alert-danger mb-0">Failed to load city population API.</div></div>';
+        } finally {
+          els.btnLoadCities.disabled = false;
+          els.kpiCities.textContent = String(appState.cities.length || "—");
+        }
+      }
+
+      els.btnLoadRegions.addEventListener("click", loadRegions);
+      els.btnLoadCities.addEventListener("click", loadCities);
+
+      (function init() {
+        els.kpiRegions.textContent = "—";
+        els.kpiCities.textContent = "—";
+        setStatus("ready");
+      })();
+    </script>
+  </body>
 </html>
