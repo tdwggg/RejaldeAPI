@@ -49,7 +49,6 @@
       .navbar .nav-link:hover {
         color: #fff;
       }
-      /* Logo hover effects */
       .navbar .navbar-brand img {
         transition: all 0.3s ease;
         filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
@@ -63,7 +62,6 @@
         transition: color 0.3s ease;
       }
 
-      /* Mobile responsive */
       @media (max-width: 768px) {
         .navbar .navbar-brand img {
           width: 35px !important;
@@ -79,7 +77,6 @@
       .heroBg .badge {
         text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
       }
-      /* Statistics buttons */
       .btn {
         border-radius: 12px;
         padding: 0.5rem 1.25rem;
@@ -122,16 +119,14 @@
   <body>
     <nav class="navbar navbar-expand-lg bg-white border-bottom">
   <div class="container">
-    <!-- IMAGE + TITLE LOGO (Left side) -->
-    <a class="navbar-brand d-flex align-items-center fw-bold text-decoration-none" href="insidejoke.html">
+    <a class="navbar-brand d-flex align-items-center fw-bold text-decoration-none" href="index.html">
       <img src="Pinaslogo.jpg" alt="Talakayin Logo" class="me-2 rounded" style="width: 40px; height: 40px; object-fit: cover;">
       <span>Talakayin</span>
     </a>
     
     <div class="collapse navbar-collapse" id="nav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a class="nav-link" href="#regions">Regions</a></li>
-        <li class="nav-item"><a class="nav-link" href="#cities">Cities</a></li>
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="senators.html">Senators</a></li>
       </ul>
     </div>
@@ -190,6 +185,16 @@
                   <button class="btn btn-success" id="btnLoadCities" type="button">
                     City
                   </button>
+                  <button class="btn btn-success" id="btnSearchCities" type="button">
+                     Search Cities
+                  </button>
+                </div>
+
+                <div class="mt-3">
+                  <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Type to search cities..." autocomplete="off">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" id="btnClearSearch">×</button>
+                  </div>
                 </div>
 
                 <hr />
@@ -217,7 +222,7 @@
                     </thead>
                     <tbody id="regionsTableBody">
                       <tr>
-                        <td colspan="3" class="text-muted">Click “Load region stats”.</td>
+                        <td colspan="3" class="text-muted">Click "Load region stats".</td>
                       </tr>
                     </tbody>
                   </table>
@@ -235,7 +240,7 @@
             <div class="card shadow-sm">
               <div class="card-body">
                 <div class="row g-3" id="citiesCards">
-                  <div class="col-12 text-muted">Click “Load city population (live)”.</div>
+                  <div class="col-12 text-muted">Click "Load city population (live)".</div>
                 </div>
               </div>
             </div>
@@ -253,15 +258,12 @@
     <script>
       const appState = {
         regions: [],
-        cities: []
+        cities: [],
+        searchTerm: ""
       };
 
       const api = {
         regionsStats: async () => {
-          // Population source: Philippine Statistics Authority (PSA) 2020 Census of Population and Housing (CPH).
-          // https://psa.gov.ph/population-and-housing
-          // Poverty source: PSA Poverty Incidence among Families (by Region), 2021.
-          // https://psa.gov.ph/poverty-press-releases
           return {
             countryName: "Philippines",
             populationYear: 2020,
@@ -289,8 +291,6 @@
         },
 
         citiesPopulationLive: async () => {
-          // City population API source (live):
-          // https://countriesnow.space/api/v0.1/countries/population/cities
           const res = await fetch("https://countriesnow.space/api/v0.1/countries/population/cities");
           if (!res.ok) {
             throw new Error(`Upstream API failed: ${res.status} ${res.statusText}`);
@@ -308,16 +308,20 @@
                 latestYear: latest.year ?? null,
                 latestPopulation: latest.value ?? null
               };
-            })
+            }).filter(city => city.cityName)
           };
         }
       };
+
       const els = {
         statusText: document.getElementById("statusText"),
         kpiRegions: document.getElementById("kpiRegions"),
         kpiCities: document.getElementById("kpiCities"),
         btnLoadRegions: document.getElementById("btnLoadRegions"),
         btnLoadCities: document.getElementById("btnLoadCities"),
+        btnSearchCities: document.getElementById("btnSearchCities"),
+        btnClearSearch: document.getElementById("btnClearSearch"),
+        searchInput: document.getElementById("searchInput"),
         regionsTableBody: document.getElementById("regionsTableBody"),
         regionsBadge: document.getElementById("regionsBadge"),
         regionsFootnote: document.getElementById("regionsFootnote"),
@@ -339,6 +343,18 @@
         const n = Number(p);
         if (!Number.isFinite(n)) return 0;
         return Math.min(100, Math.max(0, n));
+      }
+
+      function getFilteredCities() {
+        if (!appState.cities || appState.cities.length === 0) return [];
+        
+        const term = (appState.searchTerm || "").toLowerCase().trim();
+        if (!term) return appState.cities;
+
+        return appState.cities.filter(city => 
+          city.cityName && 
+          city.cityName.toLowerCase().includes(term)
+        );
       }
 
       function renderRegions() {
@@ -375,14 +391,21 @@
       }
 
       function renderCities() {
-        const rows = appState.cities;
+        const filteredCities = getFilteredCities();
         els.kpiCities.textContent = String(appState.cities.length || "—");
-        els.citiesBadge.textContent = appState.cities.length ? `${appState.cities.length} loaded` : "not loaded";
+        
+        const badgeText = appState.cities.length ? 
+          `${filteredCities.length}/${appState.cities.length}` : 
+          "not loaded";
+        els.citiesBadge.textContent = badgeText;
 
-        if (!appState.cities.length) return;
+        if (!appState.cities.length) {
+          els.citiesCards.innerHTML = '<div class="col-12 text-muted">Click "Load city population (live)".</div>';
+          return;
+        }
 
-        const top = rows.slice(0, 18);
-        els.citiesCards.innerHTML = top
+        const displayCities = filteredCities.slice(0, 18);
+        let html = displayCities
           .map((c) => {
             const populationText = c.latestPopulation ? formatInt(c.latestPopulation) : "—";
             const yearText = c.latestYear ?? "—";
@@ -407,15 +430,20 @@
           })
           .join("");
 
-        if (rows.length > top.length) {
-          els.citiesCards.innerHTML += `
+        const totalFiltered = filteredCities.length;
+        const showing = displayCities.length;
+        if (totalFiltered > showing || appState.searchTerm) {
+          const searchInfo = appState.searchTerm ? 
+            `<strong>Search: "${appState.searchTerm}"</strong> ` : '';
+          html += `
             <div class="col-12">
               <div class="smallHint mt-2">
-                Showing ${top.length} of ${rows.length} matches. Use search to narrow down.
+                ${searchInfo}Showing ${showing} of ${totalFiltered} cities
               </div>
             </div>
           `;
         }
+        els.citiesCards.innerHTML = html;
       }
 
       async function loadRegions() {
@@ -433,7 +461,6 @@
             '<tr><td colspan="3" class="text-danger">Failed to load region stats.</td></tr>';
         } finally {
           els.btnLoadRegions.disabled = false;
-          els.kpiRegions.textContent = String(appState.regions.length || "—");
         }
       }
 
@@ -454,17 +481,42 @@
             '<div class="col-12"><div class="alert alert-danger mb-0">Failed to load city population API.</div></div>';
         } finally {
           els.btnLoadCities.disabled = false;
-          els.kpiCities.textContent = String(appState.cities.length || "—");
         }
+      }
+
+      function updateSearch(term) {
+        appState.searchTerm = term || "";
+        els.searchInput.value = appState.searchTerm;
+        renderCities();
+      }
+
+      function clearSearch() {
+        updateSearch("");
       }
 
       els.btnLoadRegions.addEventListener("click", loadRegions);
       els.btnLoadCities.addEventListener("click", loadCities);
+      els.btnSearchCities.addEventListener("click", () => {
+        els.searchInput.focus();
+      });
+      els.btnClearSearch.addEventListener("click", clearSearch);
+      
+      els.searchInput.addEventListener("input", (e) => {
+        updateSearch(e.target.value);
+      });
+
+      els.searchInput.addEventListener("keyup", (e) => {
+        if (e.key === "Escape") {
+          clearSearch();
+          els.searchInput.blur();
+        }
+      });
 
       (function init() {
         els.kpiRegions.textContent = "—";
         els.kpiCities.textContent = "—";
         setStatus("ready");
+        renderCities();
       })();
     </script>
   </body>
