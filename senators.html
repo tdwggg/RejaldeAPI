@@ -16,31 +16,12 @@
         color: #f1f5f9;
       }
 
-      .navbar .navbar-brand,
-      .navbar .nav-link {
-        color: #0b1220 !important;
-        font-weight: 700;
-      }
-      .navbar .nav-link:hover {
-        color: #111827 !important;
-      }
-      .navbar {
-        display: flex;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.6);
-        border: 0;
-        border-radius: 0;
-        padding: 1rem 2rem;
-        min-height: 72px;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-      }
       .navbar .navbar-brand {
         display: inline-flex;
         align-items: center;
-        color: #f1f5f9;
+        color: #000;
         font-size: 1.5rem;
+        font-weight: 700;
       }
 
       .senatorCard {
@@ -191,6 +172,91 @@
       h4, h6 {
         color: #000;
       }
+
+      body.dark-mode {
+        background: #07111f url("PinasBG.jpg") center center / cover no-repeat fixed;
+        color: #e2e8f0;
+      }
+
+      body.dark-mode .navbar {
+        background: rgba(10, 18, 33, 0.95) !important;
+        border-color: rgba(148, 163, 184, 0.12);
+      }
+
+      body.dark-mode .navbar.bg-white,
+      body.dark-mode .navbar.border-bottom {
+        background: rgba(10, 18, 33, 0.95) !important;
+        border-color: rgba(148, 163, 184, 0.15) !important;
+      }
+
+      body.dark-mode .navbar-toggler {
+        border-color: rgba(226, 232, 240, 0.15);
+      }
+
+      body.dark-mode .navbar-toggler-icon {
+        filter: invert(1) grayscale(1) contrast(1.2);
+      }
+
+      body.dark-mode .navbar .navbar-brand,
+      body.dark-mode .navbar .nav-link {
+        color: #e2e8f0 !important;
+      }
+
+      body.dark-mode .senatorCard {
+        background: rgba(15, 23, 42, 0.92);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+      }
+
+      body.dark-mode .senatorParty,
+      body.dark-mode .senatorName,
+      body.dark-mode h1,
+      body.dark-mode .modal-title,
+      body.dark-mode .platform-item,
+      body.dark-mode h4,
+      body.dark-mode h6,
+      body.dark-mode .loadingState {
+        color: #e2e8f0;
+      }
+
+      body.dark-mode .modal-content {
+        background: rgba(15, 23, 42, 0.98);
+        color: #e2e8f0;
+      }
+
+      body.dark-mode .modal-header {
+        border-bottom-color: rgba(148, 163, 184, 0.12);
+      }
+
+      body.dark-mode .platform-item {
+        color: #d2d9e3;
+      }
+
+      body.dark-mode .platform-item::before {
+        color: #8b5cf6;
+      }
+
+      body.dark-mode .websiteBtn {
+        background: linear-gradient(135deg, #5b7de8 0%, #6b5ccf 100%);
+      }
+
+      body.dark-mode .placeholderImg {
+        background: linear-gradient(135deg, #3b4e72 0%, #10203a 100%);
+        color: #d8e3f0;
+      }
+
+      body.dark-mode .text-black {
+        color: #e2e8f0 !important;
+      }
+
+      body.dark-mode .btn-outline-secondary {
+        color: #e2e8f0;
+        border-color: rgba(226, 232, 240, 0.3);
+      }
+
+      body.dark-mode .card {
+        background: rgba(15, 23, 42, 0.95);
+        border-color: rgba(148, 163, 184, 0.16);
+      }
     </style>
   </head>
   <body>
@@ -208,6 +274,12 @@
             <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="senators.html">Senators</a></li>
           </ul>
+          <div class="d-flex align-items-center ms-3">
+            <button class="btn btn-sm btn-outline-secondary" id="themeToggleBtn" type="button" onclick="toggleTheme()">
+              <span id="themeToggleIcon">🌙</span>
+              <span id="themeToggleText">Dark</span>
+            </button>
+          </div>
         </div>
       </div>
     </nav>
@@ -535,7 +607,26 @@
         });
       }
 
-      document.addEventListener('DOMContentLoaded', loadSenators);
+      function setTheme(theme) {
+        const isDark = theme === 'dark';
+        document.body.classList.toggle('dark-mode', isDark);
+        localStorage.setItem('senatorsTheme', theme);
+        document.getElementById('themeToggleIcon').textContent =
+          isDark ? '☀️' : '🌙';
+        document.getElementById('themeToggleText').textContent =
+          isDark ? 'Light' : 'Dark';
+      }
+
+      function toggleTheme() {
+        const current = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const storedTheme = localStorage.getItem('senatorsTheme') || 'light';
+        setTheme(storedTheme);
+        loadSenators();
+      });
     </script>
   </body>
 </html>

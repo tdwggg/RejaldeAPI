@@ -14,34 +14,74 @@
     <style>
       body {
         background: url("PinasBG.jpg") center center / cover no-repeat fixed;
-        color: #f1f5f9;
+        color: #eff6ff;
       }
 
-      .navbar .navbar-brand,
-      .navbar .nav-link {
-        color: #0b1220 !important;
-        font-weight: 700;
+      body.dark-mode {
+        background: #07111f url("PinasBG.jpg") center center / cover no-repeat fixed;
+        color: #e2e8f0;
       }
-      .navbar .nav-link:hover {
-        color: #111827 !important;
+
+      body.dark-mode .navbar {
+        background: rgba(10, 18, 33, 0.95) !important;
+        border-color: rgba(148, 163, 184, 0.12) !important;
       }
-      .navbar {
-        display: flex;
-        align-items: center;
-        background: rgba(0, 0, 0, 0.6);
-        border: 0;
-        border-radius: 0;
-        padding: 1rem 2rem;
-        min-height: 72px;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
+
+      body.dark-mode .navbar .navbar-brand,
+      body.dark-mode .navbar .nav-link {
+        color: #e2e8f0 !important;
       }
+
+      body.dark-mode .navbar .nav-link:hover {
+        color: #fff !important;
+      }
+
+      body.dark-mode .heroBg {
+        background: rgba(15, 23, 42, 0.85) !important;
+      }
+
+      body.dark-mode .card {
+        background-color: rgba(15, 23, 42, 0.92) !important;
+        border-color: rgba(148, 163, 184, 0.16) !important;
+      }
+
+      body.dark-mode .btn-primary {
+        background-color: #5a667a !important;
+        border-color: #434c5c !important;
+      }
+
+      body.dark-mode .btn-success {
+        background-color: #4f6656 !important;
+        border-color: #394940 !important;
+      }
+
+      body.dark-mode .btn-outline-secondary {
+        color: #e2e8f0 !important;
+        border-color: rgba(226, 232, 240, 0.3) !important;
+      }
+
+      body.dark-mode .text-muted,
+      body.dark-mode .small,
+      body.dark-mode .mono {
+        color: #cbd5e1 !important;
+      }
+
+      body.dark-mode .badge.text-bg-light {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: #e2e8f0 !important;
+        border-color: rgba(255, 255, 255, 0.18) !important;
+      }
+
       .navbar .navbar-brand {
         display: inline-flex;
         align-items: center;
-        color: #f1f5f9;
+        color: #0b1220 !important;
         font-size: 1.5rem;
+        font-weight: 700;
+      }
+      .navbar .nav-link {
+        color: #0b1220 !important;
+        font-weight: 700;
       }
       .navbar .nav-link {
         color: #e2e8f0;
@@ -128,6 +168,9 @@
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="senators.html">Senators</a></li>
+        <button class="btn btn-sm btn-outline-secondary" id="tgl" onclick="toggleTheme()">
+          <span id="tgl-icon">🌙</span> <span id="tgl-txt">Dark</span>
+        </button>
       </ul>
     </div>
   </div>
@@ -256,6 +299,27 @@
     ></script>
 
     <script>
+      function setTheme(theme) {
+        const isDark = theme === 'dark';
+        document.body.classList.toggle('dark-mode', isDark);
+        document.documentElement.setAttribute('data-bs-theme', theme);
+        localStorage.setItem('pageTheme', theme);
+        document.getElementById('tgl-icon').innerText =
+          isDark ? '☀️' : '🌙';
+        document.getElementById('tgl-txt').innerText =
+          isDark ? 'Light' : 'Dark';
+      }
+
+      function toggleTheme() {
+        const current = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        setTheme(current === 'dark' ? 'light' : 'dark');
+      }
+
+      (function() {
+        const storedTheme = localStorage.getItem('pageTheme') || 'light';
+        setTheme(storedTheme);
+      })();
+
       const appState = {
         regions: [],
         cities: [],
