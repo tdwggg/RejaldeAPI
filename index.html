@@ -1,0 +1,523 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Philippines Population & Poverty (Student Demo)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        background: url("PinasBG.jpg") center center / cover no-repeat fixed;
+        color: #f1f5f9;
+      }
+
+      .navbar .navbar-brand,
+      .navbar .nav-link {
+        color: #0b1220 !important;
+        font-weight: 700;
+      }
+      .navbar .nav-link:hover {
+        color: #111827 !important;
+      }
+      .navbar {
+        display: flex;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.6);
+        border: 0;
+        border-radius: 0;
+        padding: 1rem 2rem;
+        min-height: 72px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .navbar .navbar-brand {
+        display: inline-flex;
+        align-items: center;
+        color: #f1f5f9;
+        font-size: 1.5rem;
+      }
+      .navbar .nav-link {
+        color: #e2e8f0;
+      }
+      .navbar .nav-link:hover {
+        color: #fff;
+      }
+      .navbar .navbar-brand img {
+        transition: all 0.3s ease;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+      }
+
+      .navbar .navbar-brand:hover img {
+        transform: scale(1.1) rotate(2deg);
+      }
+
+      .navbar .navbar-brand span {
+        transition: color 0.3s ease;
+      }
+
+      @media (max-width: 768px) {
+        .navbar .navbar-brand img {
+          width: 35px !important;
+          height: 35px !important;
+        }
+      }
+
+      .heroBg {
+        background: rgba(11, 18, 32, 0.75) !important;
+      }
+      .heroBg h1,
+      .heroBg p,
+      .heroBg .badge {
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+      }
+      .btn {
+        border-radius: 12px;
+        padding: 0.5rem 1.25rem;
+      }
+      .btn-primary {
+        background-color: #9b9c9e;
+        border-color: #606265;
+      }
+      .btn-primary:hover {
+        background-color: #838da9;
+        border-color: #353947;
+      }
+      .btn-success {
+        background-color: #76837b;
+        border-color: #49524c;
+      }
+      .btn-success:hover {
+        background-color: #696c6a;
+        border-color: #212222;
+      }
+
+      .heroCard {
+        border: 0;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .kpi {
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+      }
+      .card {
+        border-radius: 14px;
+        background-color: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(226, 232, 240, 0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-white border-bottom">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center fw-bold text-decoration-none" href="index.html">
+      <img src="Pinaslogo.jpg" alt="Talakayin Logo" class="me-2 rounded" style="width: 40px; height: 40px; object-fit: cover;">
+      <span>Talakayin</span>
+    </a>
+    
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="senators.html">Senators</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <header class="container my-4">
+      <div class="card heroCard shadow-sm">
+        <div class="heroBg text-white p-4 p-md-5">
+          <div class="row g-4 align-items-center">
+            <div class="col-lg-7">
+              <h1 class="display-6 fw-bold mb-2">Population and the Poverty Rate of the Filipinos</h1>
+              <p class="mb-0 opacity-75">
+                Let the data tell the story! Never be silenced.
+              </p>
+              <div class="mt-3 d-flex flex-wrap gap-2">
+              </div>
+            </div>
+            <div class="col-lg-5">
+              <div class="kpi p-3">
+                <div class="row g-3">
+                  <div class="col-6">
+                    <div class="fw-semibold">Regions</div>
+                    <div class="fs-4 fw-bold" id="kpiRegions">—</div>
+                  </div>
+                  <div class="col-6">
+                    <div class="fw-semibold">Cities</div>
+                    <div class="fs-4 fw-bold" id="kpiCities">—</div>
+                  </div>
+                  <div class="col-12">
+                    <div class="small opacity-75">
+                      Status:
+                      <span class="mono" id="statusText">loading…</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container pb-5">
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="stickyTopPanel">
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title mb-2">Statistics</h5>
+
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary" id="btnLoadRegions" type="button">
+                    Region Statistics
+                  </button>
+                  <button class="btn btn-success" id="btnLoadCities" type="button">
+                    City
+                  </button>
+                  <button class="btn btn-success" id="btnSearchCities" type="button">
+                     Search Cities
+                  </button>
+                </div>
+
+                <div class="mt-3">
+                  <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Type to search cities..." autocomplete="off">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" id="btnClearSearch">×</button>
+                  </div>
+                </div>
+
+                <hr />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <section id="regions" class="mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h3 class="h4 mb-0">Regions</h3>
+              <span class="badge text-bg-light border" id="regionsBadge">not loaded</span>
+            </div>
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle mb-0">
+                    <thead>
+                      <tr>
+                        <th style="min-width: 180px">Region</th>
+                        <th class="text-end">Population (2020)</th>
+                        <th class="text-end">Poverty incidence (2021)</th>
+                      </tr>
+                    </thead>
+                    <tbody id="regionsTableBody">
+                      <tr>
+                        <td colspan="3" class="text-muted">Click "Load region stats".</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="mt-3 smallHint" id="regionsFootnote"></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="cities" class="mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h3 class="h4 mb-0">Cities / Municipalities</h3>
+              <span class="badge text-bg-light border" id="citiesBadge">not loaded</span>
+            </div>
+            <div class="card shadow-sm">
+              <div class="card-body">
+                <div class="row g-3" id="citiesCards">
+                  <div class="col-12 text-muted">Click "Load city population (live)".</div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      const appState = {
+        regions: [],
+        cities: [],
+        searchTerm: ""
+      };
+
+      const api = {
+        regionsStats: async () => {
+          return {
+            countryName: "Philippines",
+            populationYear: 2020,
+            povertyYear: 2021,
+            rows: [
+              { regionCode: "NCR", regionName: "National Capital Region (NCR)", population: 13484462, povertyIncidencePercent: 2.4 },
+              { regionCode: "CAR", regionName: "Cordillera Administrative Region (CAR)", population: 1797660, povertyIncidencePercent: 6.1 },
+              { regionCode: "I", regionName: "Ilocos Region (Region I)", population: 5301139, povertyIncidencePercent: 10.1 },
+              { regionCode: "II", regionName: "Cagayan Valley (Region II)", population: 3685744, povertyIncidencePercent: 10.0 },
+              { regionCode: "III", regionName: "Central Luzon (Region III)", population: 12422172, povertyIncidencePercent: 6.0 },
+              { regionCode: "IV-A", regionName: "CALABARZON (Region IV-A)", population: 16019599, povertyIncidencePercent: 5.6 },
+              { regionCode: "IV-B", regionName: "MIMAROPA (Region IV-B)", population: 3228558, povertyIncidencePercent: 14.8 },
+              { regionCode: "V", regionName: "Bicol Region (Region V)", population: 6082165, povertyIncidencePercent: 20.0 },
+              { regionCode: "VI", regionName: "Western Visayas (Region VI)", population: 7954723, povertyIncidencePercent: 16.3 },
+              { regionCode: "VII", regionName: "Central Visayas (Region VII)", population: 8081988, povertyIncidencePercent: 16.0 },
+              { regionCode: "VIII", regionName: "Eastern Visayas (Region VIII)", population: 4547150, povertyIncidencePercent: 21.5 },
+              { regionCode: "IX", regionName: "Zamboanga Peninsula (Region IX)", population: 3875576, povertyIncidencePercent: 24.0 },
+              { regionCode: "X", regionName: "Northern Mindanao (Region X)", population: 5022768, povertyIncidencePercent: 16.5 },
+              { regionCode: "XI", regionName: "Davao Region (Region XI)", population: 5243536, povertyIncidencePercent: 10.9 },
+              { regionCode: "XII", regionName: "SOCCSKSARGEN (Region XII)", population: 4901894, povertyIncidencePercent: 20.4 },
+              { regionCode: "XIII", regionName: "Caraga (Region XIII)", population: 2804125, povertyIncidencePercent: 24.1 },
+              { regionCode: "BARMM", regionName: "Bangsamoro (BARMM)", population: 4404044, povertyIncidencePercent: 31.2 }
+            ]
+          };
+        },
+
+        citiesPopulationLive: async () => {
+          const res = await fetch("https://countriesnow.space/api/v0.1/countries/population/cities");
+          if (!res.ok) {
+            throw new Error(`Upstream API failed: ${res.status} ${res.statusText}`);
+          }
+          const data = await res.json();
+          const phOnly = (data.data || []).filter((x) => x.country === "Philippines");
+          return {
+            countryName: "Philippines",
+            level: "city",
+            rows: phOnly.map((x) => {
+              const counts = x.populationCounts || [];
+              const latest = counts[counts.length - 1] || {};
+              return {
+                cityName: x.city,
+                latestYear: latest.year ?? null,
+                latestPopulation: latest.value ?? null
+              };
+            }).filter(city => city.cityName)
+          };
+        }
+      };
+
+      const els = {
+        statusText: document.getElementById("statusText"),
+        kpiRegions: document.getElementById("kpiRegions"),
+        kpiCities: document.getElementById("kpiCities"),
+        btnLoadRegions: document.getElementById("btnLoadRegions"),
+        btnLoadCities: document.getElementById("btnLoadCities"),
+        btnSearchCities: document.getElementById("btnSearchCities"),
+        btnClearSearch: document.getElementById("btnClearSearch"),
+        searchInput: document.getElementById("searchInput"),
+        regionsTableBody: document.getElementById("regionsTableBody"),
+        regionsBadge: document.getElementById("regionsBadge"),
+        regionsFootnote: document.getElementById("regionsFootnote"),
+        citiesCards: document.getElementById("citiesCards"),
+        citiesBadge: document.getElementById("citiesBadge")
+      };
+
+      function setStatus(text) {
+        els.statusText.textContent = text;
+      }
+
+      function formatInt(value) {
+        const num = Number(String(value).replaceAll(",", ""));
+        if (!Number.isFinite(num)) return String(value ?? "—");
+        return new Intl.NumberFormat().format(num);
+      }
+
+      function clampPercent(p) {
+        const n = Number(p);
+        if (!Number.isFinite(n)) return 0;
+        return Math.min(100, Math.max(0, n));
+      }
+
+      function getFilteredCities() {
+        if (!appState.cities || appState.cities.length === 0) return [];
+        
+        const term = (appState.searchTerm || "").toLowerCase().trim();
+        if (!term) return appState.cities;
+
+        return appState.cities.filter(city => 
+          city.cityName && 
+          city.cityName.toLowerCase().includes(term)
+        );
+      }
+
+      function renderRegions() {
+        const rows = appState.regions;
+        els.kpiRegions.textContent = String(rows.length || "—");
+        if (!rows.length) return;
+
+        els.regionsBadge.textContent = `${rows.length} loaded`;
+        els.regionsTableBody.innerHTML = rows
+          .map((r) => {
+            const pct = clampPercent(r.povertyIncidencePercent);
+            return `
+              <tr>
+                <td>
+                  <div class="fw-semibold">${r.regionName}</div>
+                  <div class="smallHint">Code: <span class="mono">${r.regionCode}</span></div>
+                </td>
+                <td class="text-end fw-semibold">${formatInt(r.population)}</td>
+                <td class="text-end">
+                  <div class="d-flex flex-column align-items-end gap-1">
+                    <div class="fw-semibold">${pct.toFixed(1)}%</div>
+                    <div class="progress w-100" style="max-width: 220px; height: 10px;">
+                      <div class="progress-bar bg-danger" role="progressbar" style="width: ${pct}%;"></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        els.regionsFootnote.innerHTML =
+          "Region population (2020) and poverty incidence (2021) are shown as a simple snapshot for this demo.";
+      }
+
+      function renderCities() {
+        const filteredCities = getFilteredCities();
+        els.kpiCities.textContent = String(appState.cities.length || "—");
+        
+        const badgeText = appState.cities.length ? 
+          `${filteredCities.length}/${appState.cities.length}` : 
+          "not loaded";
+        els.citiesBadge.textContent = badgeText;
+
+        if (!appState.cities.length) {
+          els.citiesCards.innerHTML = '<div class="col-12 text-muted">Click "Load city population (live)".</div>';
+          return;
+        }
+
+        const displayCities = filteredCities.slice(0, 18);
+        let html = displayCities
+          .map((c) => {
+            const populationText = c.latestPopulation ? formatInt(c.latestPopulation) : "—";
+            const yearText = c.latestYear ?? "—";
+            return `
+              <div class="col-md-6 col-xl-4">
+                <div class="card border-0 shadow-sm h-100">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                      <div>
+                        <div class="fw-semibold">${c.cityName}</div>
+                        <div class="smallHint">Latest year: ${yearText}</div>
+                      </div>
+                      <span class="badge text-bg-light border">city</span>
+                    </div>
+                    <hr class="my-2" />
+                    <div class="fs-5 fw-bold">${populationText}</div>
+                    <div class="smallHint">Population (latest available)</div>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+
+        const totalFiltered = filteredCities.length;
+        const showing = displayCities.length;
+        if (totalFiltered > showing || appState.searchTerm) {
+          const searchInfo = appState.searchTerm ? 
+            `<strong>Search: "${appState.searchTerm}"</strong> ` : '';
+          html += `
+            <div class="col-12">
+              <div class="smallHint mt-2">
+                ${searchInfo}Showing ${showing} of ${totalFiltered} cities
+              </div>
+            </div>
+          `;
+        }
+        els.citiesCards.innerHTML = html;
+      }
+
+      async function loadRegions() {
+        els.btnLoadRegions.disabled = true;
+        setStatus("loadingRegions…");
+        try {
+          const data = await api.regionsStats();
+          appState.regions = data.rows || [];
+          renderRegions();
+          setStatus("regionsLoaded");
+        } catch (e) {
+          setStatus(`regionsError: ${String(e)}`);
+          els.regionsBadge.textContent = "error";
+          els.regionsTableBody.innerHTML =
+            '<tr><td colspan="3" class="text-danger">Failed to load region stats.</td></tr>';
+        } finally {
+          els.btnLoadRegions.disabled = false;
+        }
+      }
+
+      async function loadCities() {
+        els.btnLoadCities.disabled = true;
+        setStatus("loadingCities…");
+        els.citiesCards.innerHTML =
+          '<div class="col-12"><div class="alert alert-info mb-0">Loading live city population…</div></div>';
+        try {
+          const data = await api.citiesPopulationLive();
+          appState.cities = data.rows || [];
+          renderCities();
+          setStatus("citiesLoaded");
+        } catch (e) {
+          setStatus(`citiesError: ${String(e)}`);
+          els.citiesBadge.textContent = "error";
+          els.citiesCards.innerHTML =
+            '<div class="col-12"><div class="alert alert-danger mb-0">Failed to load city population API.</div></div>';
+        } finally {
+          els.btnLoadCities.disabled = false;
+        }
+      }
+
+      function updateSearch(term) {
+        appState.searchTerm = term || "";
+        els.searchInput.value = appState.searchTerm;
+        renderCities();
+      }
+
+      function clearSearch() {
+        updateSearch("");
+      }
+
+      els.btnLoadRegions.addEventListener("click", loadRegions);
+      els.btnLoadCities.addEventListener("click", loadCities);
+      els.btnSearchCities.addEventListener("click", () => {
+        els.searchInput.focus();
+      });
+      els.btnClearSearch.addEventListener("click", clearSearch);
+      
+      els.searchInput.addEventListener("input", (e) => {
+        updateSearch(e.target.value);
+      });
+
+      els.searchInput.addEventListener("keyup", (e) => {
+        if (e.key === "Escape") {
+          clearSearch();
+          els.searchInput.blur();
+        }
+      });
+
+      (function init() {
+        els.kpiRegions.textContent = "—";
+        els.kpiCities.textContent = "—";
+        setStatus("ready");
+        renderCities();
+      })();
+    </script>
+  </body>
+</html>
